@@ -1,3 +1,6 @@
-from db import create_connection
+from website import create_app
 
-create_connection(r'DB/baby.db')
+app = create_app()
+
+if __name__ == '__main__':
+    app.run(debug=True)
