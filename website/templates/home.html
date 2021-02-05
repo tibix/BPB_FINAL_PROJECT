@@ -1,23 +1,23 @@
 {% extends "base.html" %}{% block title %}Home{% endblock %}
 
 {% block content %}
-<h1 align="center">NOTES</h1>
-<ul class="list-group list-group-flush" id="notes">
-    {% for note in user.notes %}
-    <li class="list-group-item">
-        {{ note.data }}
-        <button type="button" class="close" onClick="deleteNote({{ note.id }})">
-            <span area-hidden="true">&#128465;</span>
-        </button>
-    </li>
-    {% endfor %}
-</ul>
-<br />
-<form method="POST">
-    <textarea name="note" id="note" class="form-control"></textarea>
-    <br />
-    <div align="center">
-        <button type="submit" class="btn btn-primary">Add Note</button>
+<div class="row">
+{% for child in user.kids %}
+      
+    <div class="col-md-6">
+        <div class="card mdb-color lighten-2 text-center z-depth-2">
+            <div class="card-header">
+                {{ child.c_first_name }}
+            </div>
+            <div class="card-body">
+                <img class="card-img-top" src="{{ url_for('static', filename='baby_' + child.c_gender + '.png') }}" width="40" height="350" alt="{{ child_c_first_name }}'s photo not available">
+                <p class="card-text">{{ child.c_birth_date }}</p>
+            </div>
+            <a href="/add_measurements?child={{ child.id }}" class="btn btn-primary">Add measurements</a>
+            <a href="/check_progress?child={{ child.id }}" class="btn btn-success">Check progress</a>
+        </div>
     </div>
-</form>
+    
+{% endfor %}
+</div>
 {% endblock %}

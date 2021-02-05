@@ -1,0 +1,9 @@
+{% extends "base.html" %}{% block title %}Home{% endblock %}
+
+{% block content %}
+<h1 align="center">{{ child.c_first_name + " " + child.c_last_name }}'s Progress</h1>
+
+    {{ div | safe }}
+    {{ script | safe }}
+
+{% endblock %}

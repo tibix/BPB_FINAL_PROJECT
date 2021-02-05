@@ -1,0 +1,21 @@
+{% extends "base.html" %}{% block title %}Home{% endblock %}
+
+{% block content %}
+<h1 align="center">Add measurements for {{ child.c_first_name + " " + child.c_last_name }}</h1>
+<form method="POST">
+    <div class="form-group">
+        <label for="child_height">Child Current Height</label>
+        <input type="text" class="form-control" id="child_height" name="child_height" placeholder="Enter child's current height" />
+    </div>
+    <div class="form-group">
+        <label for="child_weight">Child Current Weight</label>
+        <input type="text" class="form-control" id="child_weight" name="child_weight" placeholder="Enter child's current weight" />
+    </div>
+    <div class="form-group">
+        <label for="date">Date of measurement</label>
+        <input type="date" class="form-control" id="date" name="date" placeholder="" />
+    </div>
+    <br/>
+    <button type="submit" class="btn btn-primary">Add measurements</button>
+</form>
+{% endblock %}

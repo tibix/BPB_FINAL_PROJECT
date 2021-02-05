@@ -14,7 +14,9 @@
             href="https://stackpath.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css"
             crossorigin="anonymous"
         />
-
+        <link
+            href="http://cdn.bokeh.org/bokeh/release/bokeh-2.0.1.min.css"
+            rel="stylesheet" type="text/css">
         <title>{% block title %}Home{% endblock %}</title>
     </head>
     <body>
@@ -28,16 +30,16 @@
                     <ul class="navbar-nav">
                         <div class="dropdown">
                             <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenu2" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                <span><i class="fas fa-home"></i></span> {{ user.first_name }}
+                                <span><i class="fas fa-home"></i></span> {{ user.u_fname + " " + user.u_lname }}
                             </button>
                             <div class="dropdown-menu" aria-labelledby="dropdownMenu2">
-                                    
-                                    <a class="dropdown-item" id="logout" href="/add-child"><span><i class="fas fa-plus"></i></span> Add child</a>
-                                    <a class="dropdown-item" id="logout" href="/edit-child"><span><i class="fas fa-baby"></i></span> Edit child</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" id="logout" href="/edit-profile"><span><i class="fas fa-user-edit"></i></span> Edit Profile</a>
-                                    <div class="dropdown-divider"></div>
-                                    <a class="dropdown-item" id="logout" href="/logout"><span><i class="fas fa-sign-out-alt"></i></span> Logout</a>
+                                <a class="dropdown-item" id="home" href="/"><span><i class="fas fa-home"></i></span> Home</a>
+                                <a class="dropdown-item" id="add_child" href="/add_child"><span><i class="fas fa-plus"></i></span> Add child</a>
+                                <a class="dropdown-item" id="edit_child" href="/edit_child"><span><i class="fas fa-baby"></i></span> Edit child</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" id="edit_profile" href="/edit_profile"><span><i class="fas fa-user-edit"></i></span> Edit Profile</a>
+                                <div class="dropdown-divider"></div>
+                                <a class="dropdown-item" id="logout" href="/logout"><span><i class="fas fa-sign-out-alt"></i></span> Logout</a>
                             </div>
                         </div>
                         
@@ -94,6 +96,7 @@
             crossorigin="anonymous">
         </script>
         <script src="https://kit.fontawesome.com/6f78ace1ca.js" crossorigin="anonymous"></script>
+        <script src="http://cdn.bokeh.org/bokeh/release/bokeh-2.0.1.min.js"></script>
         <script
         type="text/javascript"
         src="{{ url_for('static', filename='index.js') }}">

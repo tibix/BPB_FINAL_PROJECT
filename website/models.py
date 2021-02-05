@@ -3,17 +3,35 @@ from flask_login import UserMixin
 from sqlalchemy.sql import func
 
 
-class Note(db.Model):
-    id = db.Column(db.Integer, primary_key=True)
-    data = db.Column(db.String(10000))
-    date = db.Column(db.DateTime(timezone=True), default=func.now())
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'))
-
-
 class User(db.Model,UserMixin):
     id = db.Column(db.Integer, primary_key=True)
-    email = db.Column(db.String(150), unique=True)
-    password = db.Column(db.String(150))
-    first_name = db.Column(db.String(150))
-    notes = db.relationship('Note')
+    u_name = db.Column(db.String(20), unique=True)
+    u_fname = db.Column(db.String(50))
+    u_lname = db.Column(db.String(50))
+    u_email = db.Column(db.String(150), unique=True)
+    u_password = db.Column(db.String(150))
+    u_type = db.Column(db.String(5))
+    u_date_created = db.Column(db.DateTime(timezone=True), default=func.now())
+    u_last_login = db.Column(db.DateTime(timezone=True), default=func.now())
+    kids = db.relationship('Child')
 
+
+class Child(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    c_first_name = db.Column(db.String(50))
+    c_last_name = db.Column(db.String(50))
+    c_birth_date = db.Column(db.Date())
+    c_gender = db.Column(db.String(6))
+    c_height = db.Column(db.Integer)
+    c_weight = db.Column(db.Float(precision='3,2'))
+    c_parent_id = db.Column(db.Integer, db.ForeignKey('user.id'))
+    history = db.relationship('History')
+
+
+class History(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    week = db.Column(db.Integer)
+    child_height = db.Column(db.Integer)
+    child_weight = db.Column(db.Float(precision='3,2'))
+    date_created = db.Column(db.DateTime(timezone=True), default=func.now())
+    child_id = db.Column(db.ForeignKey('child.id'))
