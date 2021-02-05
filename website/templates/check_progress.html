@@ -5,5 +5,9 @@
 
     {{ div | safe }}
     {{ script | safe }}
-
+<div>
+    <a href="/add_measurements?child={{ child.id }}" role="button" class="btn btn-outline-secondary btn-lg btn-block">
+        <i class="fas fa-ruler-horizontal"> Add new measurements </i> <i class="fas fa-weight"></i>
+    </a>
+</div>
 {% endblock %}

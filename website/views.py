@@ -17,44 +17,12 @@ views = Blueprint('views', __name__)
 def home():
     user = current_user
     def get_kids(user):
-        result = Child.query.filter_by(c_parent_id=user)
+        result = Child.query.filter_by(c_parent_id=user).all()
         return result
 
-    data = get_kids(user.id)
-    # if request.method == 'POST':
-        # this means we are adding a child or a measurement of a child
+    data = len(get_kids(user.id))
         
     return render_template('home.html', data=data, user=current_user)
-
-
-@views.route('/add_child', methods=['GET','POST'])
-@login_required
-def add_child():
-    user = current_user
-    if request.method == 'POST':
-        c_first_name = request.form.get('c_fname')
-        c_last_name = request.form.get('c_lname')
-        c_birth_date = request.form.get('c_birth_date')
-        c_gender = request.form.get('c_gender')
-        c_height = request.form.get('c_height')
-        c_weight = float(request.form.get('c_weight'))
-
-        child = Child.query.filter_by(c_first_name = c_first_name)
-
-        # if child:
-        #     flash('Child already exists', category='error')
-        # else:
-        if c_birth_date != '':
-            d = dt.datetime.strptime(c_birth_date, "%Y/%m/%d")
-            c_birth_date = d.date()
-
-        new_child = Child(c_first_name=c_first_name, c_last_name=c_last_name, c_birth_date=c_birth_date, c_gender=c_gender, c_height=c_height, c_weight=c_weight, c_parent_id=user.id)
-        db.session.add(new_child)
-        db.session.commit()
-        flash('Child added successfully!', category='success')
-        return redirect(url_for('views.home'))
-
-    return render_template('add_child.html', user=user)
 
 
 @views.route('/edit_profile', methods=['GET','POST'])
@@ -89,6 +57,48 @@ def edit_profile():
     return render_template('edit_profile.html', user=user)
 
 
+@views.route('/add_child', methods=['GET','POST'])
+@login_required
+def add_child():
+    user = current_user
+    if request.method == 'POST':
+        c_first_name = request.form.get('c_fname')
+        c_last_name = request.form.get('c_lname')
+        c_birth_date = request.form.get('c_birth_date')
+        c_gender = request.form.get('c_gender')
+        c_height = request.form.get('c_height')
+        c_weight = request.form.get('c_weight')
+
+        def is_numeric_float(s):
+            try:
+                float(s)
+                return True
+            except ValueError:
+                return False
+
+        d = dt.datetime.strptime(c_birth_date, "%Y-%m-%d")
+        c_birth_date = d.date()
+        child = Child.query.filter_by(c_first_name=c_first_name).first()
+        days = (dt.datetime.now() - dt.datetime.strptime(str(c_birth_date), "%Y-%m-%d")).days
+        
+        if child:
+            flash('Child already exists', category='error')
+        elif days < 0:
+            flash('Cannot add an unborn child', category='error')
+        elif not c_height.isnumeric():
+            flash('Height must be expressed in cm', category='error')
+        elif not is_numeric_float(c_weight):
+            flash(f'Weight must be expressed in Kg.grams: {c_weight}', category='error')
+        else:
+            new_child = Child(c_first_name=c_first_name, c_last_name=c_last_name, c_birth_date=c_birth_date, c_gender=c_gender, c_height=c_height, c_weight=c_weight, c_parent_id=user.id)
+            db.session.add(new_child)
+            db.session.commit()
+            flash('Child added successfully!', category='success')
+            return redirect(url_for('views.home'))
+
+    return render_template('add_child.html', user=user)
+
+
 @views.route('/add_measurements', methods=['GET','POST'])
 @login_required
 def add_measurements():
@@ -97,7 +107,7 @@ def add_measurements():
     if child == None:
         flash('Child does not exist', category='error')
         return redirect(url_for('views.home'))
-    if child.c_parent_id != user.id:
+    elif child.c_parent_id != user.id:
         flash('This child is not yours', category='error')
         return redirect(url_for('views.home'))
     else:
@@ -112,6 +122,8 @@ def add_measurements():
                 flash('Child heigth need to be filled in!', category='error')
             elif not date_created:
                 date_created = dt.datetime.now().date().strftime('%Y-%m-%d')
+            elif (dt.datetime.now() - dt.datetime.strptime(str(date_created), "%Y-%m-%d")).days < 0:
+                flash(f'Cannot add data for future dates! Today is {dt.datetime.now().date()} and you are trying to add data for {date_created}', category='error')
             else:
                 # convert to date since data is coming in as string
                 date_created = dt.datetime.strptime(date_created, "%Y-%m-%d").date()
@@ -177,9 +189,7 @@ def check_progress():
         p.sizing_mode="stretch_width"
         p.legend.location="center_right"
         p.legend.click_policy="hide"
+
         script, div = components(p)
-    
-    if request.method == 'POST':
-        pass
 
     return render_template('check_progress.html', user=user, script=script, div=div, child=child)
