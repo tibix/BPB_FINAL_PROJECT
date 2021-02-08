@@ -114,7 +114,7 @@ def add_measurements():
         if request.method == 'POST':
             child_height = request.form.get('child_height')
             child_weight = request.form.get('child_weight')
-            date_created = request.form.get('date')
+            date_created = request.form.get('m_date')
 
             if not child_height:
                 flash('Child heigth need to be filled in!', category='error')
