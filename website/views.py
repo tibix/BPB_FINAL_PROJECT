@@ -9,6 +9,7 @@ from bokeh.plotting import figure
 from bokeh.models import Range1d
 from bokeh.embed import components
 
+
 views = Blueprint('views', __name__)
 
 

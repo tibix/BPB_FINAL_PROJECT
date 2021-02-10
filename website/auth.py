@@ -3,7 +3,8 @@ from .models import User
 from werkzeug.security import generate_password_hash, check_password_hash
 from . import db
 from flask_login import login_user, login_required, logout_user, current_user
-from datetime import date
+from datetime import datetime as dt
+from sqlalchemy.sql import func
 
 
 auth = Blueprint('auth', __name__)
@@ -21,6 +22,13 @@ def login():
 
         if user:
             if check_password_hash(user.u_password, password):
+                # update User's last log in date and IP
+                current_ip = request.remote_addr
+                db.session.query(User).filter(User.id == user.id).update({User.u_last_login:func.now()}, synchronize_session='fetch')
+                db.session.query(User).filter(User.id == user.id).update({User.u_last_ip:current_ip})
+                db.session.commit()
+                
+                print(current_ip)
                 flash("Logged in successfully", category='success')
                 login_user(user, remember=True)
                 return redirect(url_for('views.home'))
@@ -41,6 +49,7 @@ def logout():
 
 @auth.route('/sign-up', methods=['GET', 'POST'])
 def signup():
+    current_ip = request.remote_addr
     if request.method == 'POST':
         u_name = request.form.get('userName')
         u_fname = request.form.get('firstName')
@@ -62,7 +71,7 @@ def signup():
         elif len(password1) < 3:
             flash('Password must be at least 7 characters', category='error')
         else:
-            new_user = User(u_name=u_name, u_fname=u_fname, u_lname=u_lname, u_email=u_email, u_password=generate_password_hash(password1, method='sha256'))
+            new_user = User(u_name=u_name, u_fname=u_fname, u_lname=u_lname, u_email=u_email, u_password=generate_password_hash(password1, method='sha256'),u_last_ip=current_ip)
             db.session.add(new_user)
             db.session.commit()
             login_user(new_user, remember=True)

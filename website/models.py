@@ -12,7 +12,8 @@ class User(db.Model,UserMixin):
     u_password = db.Column(db.String(150))
     u_type = db.Column(db.String(5))
     u_date_created = db.Column(db.DateTime(timezone=True), default=func.now())
-    u_last_login = db.Column(db.DateTime(timezone=True), default=func.now())
+    u_last_login = db.Column(db.DateTime(timezone=False), default=func.now())
+    u_last_ip = db.Column(db.String(15))
     kids = db.relationship('Child')
 
 
