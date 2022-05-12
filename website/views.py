@@ -194,3 +194,19 @@ def check_progress():
         script, div = components(p)
 
     return render_template('check_progress.html', user=user, script=script, div=div, child=child)
+
+@views.route('/child_history', methods=['GET','POST'])
+@login_required
+def child_history():
+    user = current_user
+    child = Child.query.get(request.args.get('child'))
+    if child == None:
+        flash('Child does not exist', category='error')
+        return redirect(url_for('views.home'))
+    elif child.c_parent_id != user.id:
+        flash('This child is not yours', category='error')
+        return redirect(url_for('views.home'))
+    else:
+        pass
+
+    return render_template('child_history.html', user=user, child=child)

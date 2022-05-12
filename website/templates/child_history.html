@@ -1,0 +1,30 @@
+{% extends "base.html" %}{% block title %}BGMA::Child History{% endblock %}
+{% block content %}
+<h3>Growth History Log for {{child.c_first_name}} </h3>
+<div>
+    <table class="table table-striped table-dark">
+        <thead class="thead-dark">
+          <tr>
+            <th scope="col">Week</th>
+            <th scope="col">Height</th>
+            <th scope="col">Weight</th>
+            <th scope="col">Date Created</th>
+            <th scope="col">Edit</th>
+            <th scope="col">Delete</th>
+          </tr>
+        </thead>
+        <tbody>
+            {% for hist in child.history %}
+            <tr>
+                <td>{{ hist.week }}</td>
+                <td>{{ hist.child_height }}</td>
+                <td>{{ hist.child_weight }}</td>
+                <td>{{ hist.date_created }}</td>    
+                <td><a href="/edit_history_entry?h_id={{hist.id}}" type=button class="btn btn-outline-success">Edit</a></td>
+                <td><button type=button class="btn btn-outline-danger">Delete</td>     
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

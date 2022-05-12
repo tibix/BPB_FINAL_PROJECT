@@ -10,8 +10,9 @@
                 <p class="card-text">{{ child.c_birth_date }}</p>
             </div>
             <div class="card-footer">
-                <a href="/add_measurements?child={{ child.id }}" class="btn btn-outline-primary" style="float:left">Add measurements</a>
-                <a href="/check_progress?child={{ child.id }}" class="btn btn-outline-success" style="float:right">Check progress</a>
+                <a href="/add_measurements?child={{ child.id }}" class="btn btn-outline-primary" >Add measurements</a>
+                <a href="/child_history?child={{ child.id }}" class="btn btn-outline-warning" >Review History</a>
+                <a href="/check_progress?child={{ child.id }}" class="btn btn-outline-success" >Check progress</a>
             </div>
         </div>
     <br />
